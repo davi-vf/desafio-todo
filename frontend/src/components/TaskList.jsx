@@ -14,8 +14,8 @@ export default function TaskList({ tasks, onToggle, onDelete, disabled }) {
   return (
     <section className="task-list-section">
       <p className="task-summary">
-        {completedCount} de {tasks.length} concluída
-        {tasks.length === 1 ? "" : "s"}
+        {completedCount} de {tasks.length}{" "}
+        {tasks.length === 1 ? "concluída" : "concluídas"}
       </p>
       <ul className="task-list">
         {tasks.map((task) => (

@@ -1,0 +1,242 @@
+:root {
+  --bg: #f3efe6;
+  --bg-accent: #e8dfd0;
+  --surface: #fffdf8;
+  --ink: #1f1a14;
+  --muted: #6a5f52;
+  --line: #d8cdbd;
+  --accent: #2f5d50;
+  --accent-hover: #244a40;
+  --danger: #8f3b2f;
+  --danger-hover: #742f25;
+  --done: #7a8f84;
+  --shadow: 0 24px 60px rgba(31, 26, 20, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "DM Sans", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(47, 93, 80, 0.12), transparent 28%),
+    linear-gradient(180deg, var(--bg-accent), var(--bg));
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.app {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1rem 3rem;
+}
+
+.app-shell {
+  width: min(720px, 100%);
+}
+
+.app-header {
+  margin-bottom: 1.5rem;
+}
+
+.app-eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(3rem, 10vw, 4.5rem);
+  font-weight: 400;
+  line-height: 0.95;
+}
+
+.app-lead {
+  margin: 0.85rem 0 0;
+  max-width: 34rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.app-panel {
+  background: var(--surface);
+  border: 1px solid rgba(31, 26, 20, 0.08);
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+}
+
+.task-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+}
+
+.task-form input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+
+.task-form input:focus {
+  outline: 2px solid rgba(47, 93, 80, 0.25);
+  border-color: var(--accent);
+}
+
+.task-form button,
+.task-delete {
+  border: 0;
+  padding: 0.9rem 1.1rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.task-form button {
+  background: var(--accent);
+  color: #fff;
+}
+
+.task-form button:hover:not(:disabled),
+.task-delete:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.task-form button:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.task-form button:disabled,
+.task-delete:disabled,
+.task-check input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.app-error {
+  margin: 1rem 0 0;
+  padding: 0.85rem 1rem;
+  background: rgba(143, 59, 47, 0.08);
+  color: var(--danger);
+  border: 1px solid rgba(143, 59, 47, 0.18);
+}
+
+.loading-state,
+.empty-state,
+.task-summary {
+  color: var(--muted);
+}
+
+.loading-state,
+.empty-state {
+  margin: 1.25rem 0 0;
+}
+
+.task-summary {
+  margin: 1.25rem 0 0.75rem;
+  font-size: 0.95rem;
+}
+
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  animation: fadeUp 0.35s ease both;
+}
+
+.task-check {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.task-check input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--accent);
+}
+
+.task-title {
+  line-height: 1.4;
+}
+
+.task-item.completed .task-title {
+  color: var(--done);
+  text-decoration: line-through;
+}
+
+.task-delete {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid rgba(143, 59, 47, 0.25);
+}
+
+.task-delete:hover:not(:disabled) {
+  background: rgba(143, 59, 47, 0.08);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .task-form {
+    grid-template-columns: 1fr;
+  }
+
+  .task-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .task-delete {
+    align-self: flex-end;
+  }
+}

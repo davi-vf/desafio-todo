@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "tasks" ADD COLUMN IF NOT EXISTS "category" TEXT NOT NULL DEFAULT 'Geral';

@@ -2,12 +2,22 @@
   "name": "todo-backend",
   "version": "1.0.0",
   "type": "module",
+  "main": "src/modules/shared/infra/http/server.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
+    "start": "node src/modules/shared/infra/http/server.js",
+    "dev": "node --watch-path=./src --watch-path=./prisma --watch-path=./config --watch-path=./middlewares --watch-path=./lib src/modules/shared/infra/http/server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
   },
   "dependencies": {
+    "@prisma/client": "^6.11.1",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
-    "express": "^5.2.1"
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "prisma": "^6.11.1"
   }
 }

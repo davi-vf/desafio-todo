@@ -1,46 +1,81 @@
-const API_URL = "http://localhost:3001";
+import axios from "axios";
 
-async function request(path, options = {}) {
-  const response = await fetch(`${API_URL}${path}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-    ...options,
+const api = axios.create({
+  baseURL: "/api",
+});
+
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error.response?.status;
+    const requestUrl = error.config?.url || "";
+    const method = error.config?.method || "";
+    const isPublicAuthRoute =
+      requestUrl.includes("/sessions/login") ||
+      requestUrl.includes("/users/password/reset") ||
+      (requestUrl.endsWith("/users") && method === "post");
+
+    if (status === 401 && !isPublicAuthRoute) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("userName");
+      if (!window.location.pathname.startsWith("/login")) {
+        window.location.href = "/login";
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
+
+export async function registerUser({ name, email, password }) {
+  const response = await api.post("/users", { name, email, password });
+  return response.data;
+}
+
+export async function loginUser({ email, password }) {
+  const response = await api.post("/sessions/login", { email, password });
+  return response.data;
+}
+
+export async function resetPassword({ email, resetCode, password }) {
+  const response = await api.post("/users/password/reset", {
+    email,
+    resetCode,
+    password,
   });
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.error || "Erro ao comunicar com a API.");
-  }
-
-  if (response.status === 204) {
-    return null;
-  }
-
-  return response.json();
+  return response.data;
 }
 
-export function getTasks() {
-  return request("/tasks");
+export async function getTasks() {
+  const response = await api.get("/tasks");
+  return response.data;
 }
 
-export function createTask(title) {
-  return request("/tasks", {
-    method: "POST",
-    body: JSON.stringify({ title }),
-  });
+export async function createTask(title, category, description) {
+  const response = await api.post("/tasks", { title, category, description });
+  return response.data;
 }
 
-export function toggleTask(id, completed) {
-  return request(`/tasks/${id}`, {
-    method: "PATCH",
-    body: JSON.stringify({ completed }),
-  });
+export async function updateTask(id, completed) {
+  const response = await api.patch(`/tasks/${id}`, { completed });
+  return response.data;
 }
 
-export function deleteTask(id) {
-  return request(`/tasks/${id}`, {
-    method: "DELETE",
-  });
+export async function deleteTask(id) {
+  const response = await api.delete(`/tasks/${id}`);
+  return response.data;
 }
+
+export default api;

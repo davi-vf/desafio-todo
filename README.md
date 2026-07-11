@@ -4,7 +4,7 @@ O projeto é um to-do list que permite ao usuário se cadastrar, adicionar taref
 
 ## Tecnologias
 
-O sistema foi desenvolvido com arquitetura em camadas, cada uma com sua responsabilidade, utilizando JavaScript. No frontend, React (Vite) cuida da experiência visual. No backend, Node.js com Express, Prisma e PostgreSQL salvam as informações no banco. A autenticação usa JWT para proteger as rotas e bcrypt para fazer o hash das senhas. O projeto também inclui Docker Compose para subir API, frontend e banco juntos. Em produção (ou no `npm run dev` local), o `DATABASE_URL` pode apontar para o Supabase; o deploy previsto é Render (API) + Vercel (frontend).
+O sistema foi desenvolvido com arquitetura em camadas, cada uma com sua responsabilidade, utilizando JavaScript. No frontend, React (Vite) cuida da experiência visual. No backend, Node.js com Express, Prisma e PostgreSQL salvam as informações no banco. A autenticação usa JWT para proteger as rotas e bcrypt para fazer o hash das senhas. O projeto também inclui Docker Compose para subir API, frontend e banco juntos. Em produção o banco fica no Supabase; a API está no Render e o frontend na Vercel.
 
 ## Arquitetura
 
@@ -13,6 +13,16 @@ Comecei pelo backend criando, em `modules`, duas pastas principais: `users` e `t
 - **controller** — recebe a requisição da rota
 - **service** — aplica as regras de negócio
 - **repository** — acessa o banco de dados (Prisma)
+
+## Aplicação em produção
+
+- Frontend: https://desafio-todo-eta.vercel.app
+- API: https://desafio-todo.onrender.com
+- Health: https://desafio-todo.onrender.com/health
+
+Repositório: https://github.com/davi-vf/desafio-todo
+
+No plano free do Render, a API pode “dormir”; a primeira requisição depois de um tempo parado pode demorar cerca de 30–50 segundos.
 
 ## Como rodar com Docker
 
@@ -65,7 +75,7 @@ App em `http://localhost:5173`.
 ## Supabase (PostgreSQL na nuvem)
 
 1. Crie um projeto em [supabase.com](https://supabase.com).
-2. Em **Project Settings → Database**, copie a URI de conexão.
+2. Em **Connect** / **Database**, use a URI do **Session pooler** (host com `pooler.supabase.com`). A conexão Direct (IPv6) costuma falhar no Render.
 3. Cole em `DATABASE_URL` no `backend/.env` (local) e/ou nas variáveis do Render (produção).
 4. Rode `npx prisma migrate deploy` (local) ou deixe o start do Render aplicar as migrations.
 
@@ -73,30 +83,31 @@ Não commite a URL real — só o `.env.example`. Nunca versione arquivos `.env`
 
 ## Deploy (Render + Vercel)
 
-Repositório: https://github.com/davi-vf/desafio-todo
-
-Configs auxiliares já estão no repo: `render.yaml` e `frontend/vercel.json`.
+Configs auxiliares no repo: `render.yaml` e `frontend/vercel.json`.
 
 ### Render (API)
 
-1. New → Web Service (ou Blueprint com o `render.yaml`).
+1. New → Web Service a partir do GitHub (`davi-vf/desafio-todo`).
 2. Root directory: `backend`
 3. Build: `npm install && npx prisma generate`
 4. Start: `npx prisma migrate deploy && npm start`
 5. Variáveis de ambiente:
-   - `DATABASE_URL` — URI do Supabase
+   - `DATABASE_URL` — URI do Supabase (**Session pooler**)
    - `JWT_SECRET` — segredo forte
    - `PASSWORD_RESET_CODE` — código de reset (dev)
-   - `FRONTEND_URL` — URL do app na Vercel (ex.: `https://seu-app.vercel.app`)
+   - `FRONTEND_URL` — `https://desafio-todo-eta.vercel.app`
    - `NODE_VERSION` — `22`
+   - `NPM_CONFIG_PRODUCTION` — `false` (para o Prisma em `devDependencies` no install)
 
 ### Vercel (frontend)
 
 1. Importar o mesmo repo; root directory: `frontend`
 2. Framework: Vite; build `npm run build`; output `dist`
 3. Variável de ambiente:
-   - `VITE_API_URL` — `https://SEU-SERVICO.onrender.com/api`
-4. Redeploy depois de salvar a env (Vite embute a variável no build).
+   - `VITE_API_URL` — `https://desafio-todo.onrender.com/api`
+4. **Redeploy** depois de salvar a env (Vite embute a variável no build).
+
+Push na `main` do GitHub atualiza Render e Vercel automaticamente (auto-deploy).
 
 ## Endpoints principais
 

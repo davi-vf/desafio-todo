@@ -1,13 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import StatCard from "../components/StatCard.jsx";
-import TaskForm from "../components/TaskForm.jsx";
 import TaskList from "../components/TaskList.jsx";
-import {
-  createTask,
-  deleteTask,
-  getTasks,
-  updateTask,
-} from "../services/api.js";
+import { deleteTask, getTasks, updateTask } from "../services/api.js";
 import {
   STATUS_FILTERS,
   filterTasksByStatus,
@@ -19,13 +13,9 @@ import "../styles/Tasks.css";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [description, setDescription] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
   const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
   const [busyId, setBusyId] = useState(null);
   const [error, setError] = useState("");
 
@@ -44,25 +34,6 @@ export default function Tasks() {
   useEffect(() => {
     loadTasks();
   }, [loadTasks]);
-
-  async function handleSubmit(event) {
-    event.preventDefault();
-    if (!title.trim()) return;
-
-    try {
-      setSubmitting(true);
-      setError("");
-      const task = await createTask(title, category, description);
-      setTasks((current) => [task, ...current]);
-      setTitle("");
-      setCategory("");
-      setDescription("");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setSubmitting(false);
-    }
-  }
 
   async function handleToggle(task) {
     try {
@@ -146,8 +117,9 @@ export default function Tasks() {
         <div>
           <h2>Minha lista</h2>
           <p>
-            Escolha uma categoria para ver as tarefas. Depois filtre por Todas,
-            A fazer ou Concluídas.
+            Acompanhe as contagens e as categorias. Para criar tarefas, use o
+            Início. Depois escolha uma categoria para filtrar por Todas, A fazer
+            ou Concluídas.
           </p>
         </div>
       </section>
@@ -166,23 +138,7 @@ export default function Tasks() {
         />
       </section>
 
-      <section className="tasks-panel">
-        <div className="panel-header">
-          <h3>Nova tarefa</h3>
-        </div>
-        <TaskForm
-          title={title}
-          category={category}
-          description={description}
-          categories={knownCategories}
-          onTitleChange={setTitle}
-          onCategoryChange={setCategory}
-          onDescriptionChange={setDescription}
-          onSubmit={handleSubmit}
-          loading={submitting}
-        />
-        {error && <p className="error">{error}</p>}
-      </section>
+      {error && <p className="error">{error}</p>}
 
       {loading ? (
         <p className="empty-state">Carregando categorias...</p>
@@ -195,7 +151,7 @@ export default function Tasks() {
 
           {categorySummaries.length === 0 ? (
             <p className="empty-state">
-              Nenhuma categoria ainda. Crie uma tarefa para começar.
+              Nenhuma categoria ainda. Crie tarefas no Início para começar.
             </p>
           ) : (
             <div className="category-picker">

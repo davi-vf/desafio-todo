@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { AppError } from "../../shared/errors/AppError.js";
 import UserRepository from "../repositories/UserRepository.js";
+import { isValidEmail } from "../utils/isValidEmail.js";
 
 class UserPasswordResetService {
   async execute({ email, resetCode, password }) {
@@ -11,6 +12,10 @@ class UserPasswordResetService {
         "E-mail, código de recuperação e nova senha são obrigatórios.",
         400,
       );
+    }
+
+    if (!isValidEmail(trimmedEmail)) {
+      throw new AppError("Informe um e-mail válido.", 400);
     }
 
     if (password.length < 6) {

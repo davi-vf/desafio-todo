@@ -73,6 +73,7 @@ export default function TaskForm({
         placeholder="O que você vai fazer?"
         disabled={loading}
         aria-label="Título da tarefa"
+        maxLength={120}
       />
 
       <select

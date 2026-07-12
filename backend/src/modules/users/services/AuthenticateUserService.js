@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { authConfig } from "../../../../config/auth.js";
 import { AppError } from "../../shared/errors/AppError.js";
 import UserRepository from "../repositories/UserRepository.js";
+import { isValidEmail } from "../utils/isValidEmail.js";
 import { sanitizeUser } from "../utils/sanitizeUser.js";
 
 class AuthenticateUserService {
@@ -11,6 +12,10 @@ class AuthenticateUserService {
 
     if (!trimmedEmail || !password) {
       throw new AppError("E-mail e senha são obrigatórios.", 400);
+    }
+
+    if (!isValidEmail(trimmedEmail)) {
+      throw new AppError("Informe um e-mail válido.", 400);
     }
 
     const user = await UserRepository.findByEmail(trimmedEmail);

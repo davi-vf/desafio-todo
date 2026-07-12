@@ -9,6 +9,10 @@ class TaskCreateService {
       throw new AppError("O título é obrigatório.", 400);
     }
 
+    if (trimmedTitle.length > 120) {
+      throw new AppError("O título deve ter no máximo 120 caracteres.", 400);
+    }
+
     const trimmedCategory = category?.trim() || "Geral";
     const trimmedDescription = description?.trim() || "";
 

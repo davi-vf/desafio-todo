@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { resetPassword } from "../services/api.js";
+import { isValidEmail } from "../utils/email.js";
 import StepIndicator from "./StepIndicator.jsx";
 
 export default function ForgotPassword({ onSwitchToLogin, initialEmail = "" }) {
@@ -13,8 +14,9 @@ export default function ForgotPassword({ onSwitchToLogin, initialEmail = "" }) {
 
   function handleNextEmail(event) {
     event.preventDefault();
-    if (!email.trim()) {
-      setErrorMessage("Informe um e-mail válido.");
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail || !isValidEmail(trimmedEmail.toLowerCase())) {
+      setErrorMessage("Informe um e-mail válido (ex: voce@email.com).");
       return;
     }
     setErrorMessage("");

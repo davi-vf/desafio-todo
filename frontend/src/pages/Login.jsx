@@ -5,6 +5,7 @@ import Register from "../components/Register.jsx";
 import StepIndicator from "../components/StepIndicator.jsx";
 import { AuthContext } from "../contexts/authContext.js";
 import { loginUser } from "../services/api.js";
+import { isValidEmail } from "../utils/email.js";
 import "../styles/Auth.css";
 
 export default function Login() {
@@ -24,8 +25,9 @@ export default function Login() {
 
   function handleNextStep(event) {
     event.preventDefault();
-    if (!email.trim()) {
-      setErrorMessage("Informe um e-mail válido.");
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail || !isValidEmail(trimmedEmail.toLowerCase())) {
+      setErrorMessage("Informe um e-mail válido (ex: voce@email.com).");
       return;
     }
     setErrorMessage("");

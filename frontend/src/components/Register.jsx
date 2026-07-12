@@ -1,31 +1,53 @@
-import { useState } from "react";
-import { registerUser } from "../services/api.js";
+import { useState } from 'react'
+import { registerUser } from '../services/api.js'
+import { isValidEmail } from '../utils/email.js'
 
 export default function Register({ onSwitchToLogin }) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   async function handleRegister(event) {
-    event.preventDefault();
-    setErrorMessage("");
-    setSuccessMessage("");
-    setIsSubmitting(true);
+    event.preventDefault()
+    setErrorMessage('')
+    setSuccessMessage('')
+
+    const trimmedName = name.trim()
+    const trimmedEmail = email.trim().toLowerCase()
+
+    if (!trimmedName || !trimmedEmail || !password) {
+      setErrorMessage('Nome, e-mail e senha são obrigatórios.')
+      return
+    }
+
+    if (!isValidEmail(trimmedEmail)) {
+      setErrorMessage('Informe um e-mail válido (ex: voce@email.com).')
+      return
+    }
+
+    if (trimmedName.length > 80) {
+      setErrorMessage('O nome deve ter no máximo 80 caracteres.')
+      return
+    }
+
+    if (password.length < 6) {
+      setErrorMessage('A senha deve ter no mínimo 6 caracteres.')
+      return
+    }
+
+    setIsSubmitting(true)
 
     try {
-      await registerUser({ name, email, password });
-      setSuccessMessage("Conta criada! Faça login para continuar.");
-      setTimeout(() => onSwitchToLogin(), 1200);
+      await registerUser({ name: trimmedName, email: trimmedEmail, password })
+      setSuccessMessage('Conta criada! Faça login para continuar.')
+      setTimeout(() => onSwitchToLogin(), 1200)
     } catch (error) {
-      setErrorMessage(
-        error.response?.data?.error ||
-          "Não foi possível criar a conta. Tente novamente.",
-      );
+      setErrorMessage(error.response?.data?.error || 'Não foi possível criar a conta. Tente novamente.')
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
   }
 
@@ -42,6 +64,7 @@ export default function Register({ onSwitchToLogin }) {
           placeholder="Seu nome"
           value={name}
           onChange={(event) => setName(event.target.value)}
+          maxLength={80}
           required
           autoFocus
         />
@@ -79,24 +102,18 @@ export default function Register({ onSwitchToLogin }) {
       </div>
 
       {errorMessage && <p className="auth-feedback-error">{errorMessage}</p>}
-      {successMessage && (
-        <p className="auth-feedback-success">{successMessage}</p>
-      )}
+      {successMessage && <p className="auth-feedback-success">{successMessage}</p>}
 
       <button type="submit" className="btn-auth-submit" disabled={isSubmitting}>
-        {isSubmitting ? "Criando..." : "Criar conta"}
+        {isSubmitting ? 'Criando...' : 'Criar conta'}
       </button>
 
       <p className="helper-text-muted">
         Já tem conta?
-        <button
-          type="button"
-          className="link-action-bold"
-          onClick={onSwitchToLogin}
-        >
+        <button type="button" className="link-action-bold" onClick={onSwitchToLogin}>
           Entrar
         </button>
       </p>
     </form>
-  );
+  )
 }

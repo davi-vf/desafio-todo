@@ -2,7 +2,7 @@
 
 ## Apresentação do sistema
 
-To-do com login. Nomeei como **TaskFlix**: a ideia era um visual inspirado na Netflix, mais interessante do que um to-do genérico. O sistema permite criar tarefas no geral e também separar em categorias como esportes, trabalho, lazer ou qualquer outra. Basta criar a categoria e selecioná-la na hora de criar tarefas relacionadas a cada categoria.
+To-do com login. Nomeado como **TaskFlix**: a ideia é uma experiência semelhante ao aplicativo Netflix, muito mais interessante que um to-do genérico. O sistema permite criar tarefas no geral e também separar em categorias como esportes, trabalho, lazer ou qualquer outra. Basta criar a categoria e selecioná-la na hora de criar tarefas relacionadas a cada categoria.
 
 As tarefas aparecem na página **Início** (dashboard principal) e podem ser filtradas por status (a fazer, concluídas, todas) e por categoria. Cada tarefa pode receber uma descrição opcional. Na criação, o horário e a data são registrados automaticamente. Dá pra remover a tarefa ou marcar como concluída.
 
@@ -39,7 +39,7 @@ Criei uma pasta `styles` pra lidar com o CSS de cada área e manter a organizaç
 - `services` — chamadas HTTP pra API
 - `utils` — funções auxiliares das tarefas: filtros (a fazer / concluídas / todas), categorias e formatação da data e horário de criação
 
-No início o frontend tinha um visual bem básico. Utilizei a IA pra ajudar no estilo, enviando prints do visual da Netflix e do YouTube como referência. O primeiro resultado que ela entregou não batia com o que eu queria, então comecei a refinar o visual pedindo ajustes e testando até bater o que eu tinha idealizado: no **Início**, tarefas com filtros de status e categoria; na **Minha lista**, começar pelas categorias e depois pelo estado da tarefa (concluída / pendente).
+No início o frontend tinha um visual bem básico. Utilizei a IA pra ajudar no estilo, enviando prints do visual da Netflix e do YouTube como referência. O primeiro resultado que ela entregou não batia com o que eu queria, então comecei a refinar o visual pedindo ajustes e testando até bater o que eu tinha idealizado.
 
 No meio desse processo fui tendo ideias de melhorias — “isso ficaria melhor mais pro lado”, “isso deveria ficar na Minha lista”, “isso não tá legal, vou remover”. Usei engenharia de prompt e minha experiência diária com modelos de IA pra alinhar o visual. Depois de cada entrega eu checava o código pra ver se a arquitetura não tinha sido ferida. Também usei o modo de planejamento da IA: antes de executar a ideia eu lia o plano gerado pra ver se batia com o que eu precisava, e só então rodava e testava o resultado.
 
